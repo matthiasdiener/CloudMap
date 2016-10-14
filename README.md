@@ -9,7 +9,7 @@ CloudMap is a mechanism to map tasks to cloud instances based on the task affini
 
 ## Usage
 
-    $ ./CloudMap.sh <binary> <nodecount> <experiment> <metric>
+    $ ./CloudMap.sh <binary> <nodecount> <metric>
 
 ## Publication
 
