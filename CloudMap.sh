@@ -32,9 +32,6 @@ commcsv=~/comm-patterns/$NTASKS/$benchmark.A.$NTASKS-num.csv
 #generate communication matrix using the previous result
 ./arch-mat.R $numnodes comm.csv arch-$benchmark-$NTASKS.csv
 
-# archive performance results
-cp arch-$benchmark-$NTASKS.csv matrix/arch-"$exp"-$benchmark-$NTASKS-$RUNDATE.csv
-
 
 # calculate mapping using scotch library on the communication matrix
 $DIR/calcmap.sh $commcsv arch-$benchmark-$NTASKS.csv
