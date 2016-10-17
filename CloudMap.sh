@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set  -o nounset -o pipefail -o posix
+set -o errexit -o nounset -o pipefail -o posix
 
 # Directory where this script resides in
 DIR="$(cd -P "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
