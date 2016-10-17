@@ -11,6 +11,8 @@ CloudMap is a mechanism to map tasks to cloud instances based on the task affini
 ## Usage
 
     $ ./CloudMap.sh <binary> <num_ranks>
+    
+The communication pattern of the binary must be available in the same folder as the binary itself, with the ending ```.csv```.
 
 ## Publication
 
