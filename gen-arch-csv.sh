@@ -1,52 +1,44 @@
 #!/bin/bash
 
+set -o errexit -o nounset -o pipefail -o posix
+
+DIR="$(cd -P "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 mkdir -p comm
 rm -f comm/*
 
-mpibenchloc="/home/benchsmpi/mpbench"
-mpibenchexec="mpi_bench_v2"
+mpibench="$DIR/mpibench/mpi_bench"
 
-if [ $# -lt 2 ] ; then
-	echo "usage: $0 ./gen-arch-csv.sh <node_count> <metric> [message_size]"
-	exit
+(cd $DIR/mpibench && make -s)
+
+if [ $# -ne 3 ] ; then
+	echo "Usage: $0 ./gen-arch-csv.sh <hostfile> <metric> <message_size>"
+	exit 1
 fi
 
-nodes="$1"
-test="$2"
+hostfile="$1"
+metric="$2"
 size="$3"
 
-#if message size is not defined then default is 1K
-if [[ $size ]]; then
- size="M$size"
- else
- size="M1K"
-fi
+num_nodes=$(sed -n '/[^[:space:]]/p' $hostfile | wc -l)
 
-#define the fixed part used in naming the deployment processing nodes
-basehost="CCGRID-"
+readarray -t nodes < $hostfile
 
-for node in $(eval echo {01.."$nodes"})
- do
-  myid=$node
+for from in $(seq 0 $((num_nodes-1)) ); do
 
-  block=`echo "(($nodes/2)-1)" | bc`
-  start=`echo "$myid" | bc`
+	for to in $(seq $from $((num_nodes-1)) ); do
+		if [ $from -eq $to ]; then continue; fi
+		echo "$from,$to"
+		from_node=${nodes[from]}
+		to_node=${nodes[to]}
 
-  for i in $(eval echo {00.."$block"})
-   do
-    pair=`echo "(1+($i+$myid)%($nodes))" | bc | awk '{printf "%02d",$0}'`
-    if [ $i -eq $block -a $node -eq $nodes ]; then
-      echo "mpirun -bynode -host "$basehost""$myid","$basehost""$pair" -wdir $mpibenchloc ./$mpibenchexec -i 1000 -"$test" -"$size" | cut -f 2 -d ' ' | xargs echo -e "$myid"-"$pair""\t" > comm/"$myid"-"$pair".csv"
-    else
-      echo "mpirun -bynode -host "$basehost""$myid","$basehost""$pair" -wdir $mpibenchloc ./$mpibenchexec -i 1000 -"$test" -"$size" | cut -f 2 -d ' ' | xargs echo -e "$myid"-"$pair""\t" > comm/"$myid"-"$pair".csv &"
-      sleep 0.035
-    fi
-   done
- done
+		if [ $from -eq $((num_nodes-2)) -a $to -eq $((num_nodes-1)) ]; then
+			mpirun -bynode -host $from_node,$to_node $mpibench -i 1000 -$metric -$size | cut -f 2 -d ' ' | xargs echo -e $from-$to\t > comm/$from-$to.csv
+		else
+			mpirun -bynode -host $from_node,$to_node $mpibench -i 1000 -$metric -$size | cut -f 2 -d ' ' | xargs echo -e $from-$to\t > comm/$from-$to.csv &
+			sleep 0.05
+		fi
+	done
+done
 
 cat comm/*.csv > comm.csv
-
-exit 0
-
-#usage example
-#./gen-arch-csv.sh 8 l [4K]
