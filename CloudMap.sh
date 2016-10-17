@@ -18,9 +18,8 @@ METRIC="l"                    # Latency (l) or Bandwidth (b)
 ########################
 
 if [ $# -ne 2 ]; then
- echo "Usage: $0 <binary> <num_ranks>"
- echo ""
- exit 1
+	echo "Usage: $0 <binary> <num_ranks>"
+	exit 1
 fi
 
 mkdir -p matrix
