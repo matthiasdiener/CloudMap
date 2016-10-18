@@ -2,3 +2,5 @@
 mpi_bench
 *.csv
 *.grf
+*.tgt
+hostnames.txt

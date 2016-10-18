@@ -5,17 +5,17 @@ set -o errexit -o nounset -o pipefail -o posix
 # Directory where this script resides in
 DIR="$(cd -P "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-####################
-###### Configuration
-####################
+###########################
+###### Configuration ######
+###########################
 
 HOSTFILE=$DIR/hostnames.txt   # File that contains hostnames, 1 host per line
 MSG_SIZE="M1K"                # 1 KByte messages by default
 METRIC="l"                    # Latency (l) or Bandwidth (b)
 
-########################
-###### End configuration
-########################
+###########################
+###### End configuration ##
+###########################
 
 if [ $# -ne 2 ]; then
 	echo "Usage: $0 <binary> <num_ranks>"
