@@ -18,4 +18,4 @@ The communication pattern of the binary must be available in the same folder as 
 
 CloudMap is described and evaluated in the following paper:
 
-- Emmanuell D. Carreño, Matthias Diener, Eduardo H. M. Cruz, Philippe O. A. Navaux. “Automatic Communication Optimization of Parallel Applications in Public Clouds.” International Symposium on Cluster, Cloud and Grid Computing (CCGrid), 2016.
+- Emmanuell D. Carreño, Matthias Diener, Eduardo H. M. Cruz, Philippe O. A. Navaux. “Automatic Communication Optimization of Parallel Applications in Public Clouds.” International Symposium on Cluster, Cloud and Grid Computing (CCGrid), 2016.  http://dx.doi.org/10.1109/CCGrid.2016.59
